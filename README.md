@@ -1,2 +1,1 @@
-# amplify-framework-docs-ru
-Документация Amplify Framework
+# Документация Amplify Framework
