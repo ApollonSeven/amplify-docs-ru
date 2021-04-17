@@ -1,15 +1,14 @@
----
-title: Calling DynamoDB from Lambda in Node.js
-description: How to interact with a DynamoDB database from a Lambda function in Node.js
----
+# Вызов DynamoDB из Lambda в Node.js
 
-The easiest way to interact with DynamoDB from Lambda in a Node.js environment is to use the [DynamoDB document client](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html). In this guide you will learn how to interact with a DynamoDB database from a Lambda function using the Node.js runtime.
+Как взаимодействовать с базой данных DynamoDB из лямбда-функции в Node.js
 
-You will learn how to perform [put](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property), [get](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#get-property), [scan](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#scan-property), and [query](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#query-property) operations.
+Самый простой способ взаимодействия с DynamoDB из Lambda в среде Node.js - использовать [клиент документа DynamoDB](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html). В этом руководстве вы узнаете, как взаимодействовать с базой данных DynamoDB из функции Lambda, используя среду выполнения Node.js.
 
-### Creating an item in DynamoDB from Lambda
+Вы научитесь выполнять операции [put](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#put-property), [get](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#get-property), [scan](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#scan-property), и [query](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html#query-property).
 
-To create an item in DynamoDB you can use the `put` method:
+### Создание элемента в DynamoDB из Lambda
+
+Чтобы создать элемент в DynamoDB, вы можете использовать метод `put`:
 
 ```js
 const AWS = require('aws-sdk');
@@ -17,7 +16,7 @@ const docClient = new AWS.DynamoDB.DocumentClient();
 
 const params = {
   TableName : 'your-table-name',
-  /* Item properties will depend on your application concerns */
+  /* Свойства элемента будут зависеть от задач вашего приложения */
   Item: {
      id: '12345',
      price: 100.00
@@ -42,9 +41,9 @@ exports.handler = async (event) => {
 };
 ```
 
-### Getting an item by primary key in DynamoDB from Lambda
+### Получение элемента по первичному ключу в DynamoDB из Lambda
 
-To get an item by primary key in DynamoDB you can use the `get` method. A `get` request returns a single item given the primary key of that item:
+Чтобы получить элемент по первичному ключу в DynamoDB, вы можете использовать метод `get`. Запрос `get` возвращает один элемент с учетом первичного ключа этого элемента:
 
 ```js
 const AWS = require('aws-sdk');
@@ -52,7 +51,7 @@ const docClient = new AWS.DynamoDB.DocumentClient();
 
 const params = {
   TableName : 'your-table-name',
-  /* Item properties will depend on your application concerns */
+  /* Свойства элемента будут зависеть от задач вашего приложения */
   Key: {
     id: '12345'
   }
@@ -77,9 +76,9 @@ exports.handler = async (event, context) => {
 }
 ```
 
-### Scanning a table
+### Сканирование таблицы
 
-A `scan` returns one or more items and item attributes by accessing every item in a table or a secondary index (limit of 1 MB of data).
+Метод `scan` возвращает один или несколько элементов и атрибутов элементов, обращаясь к каждому элементу в таблице или вторичном индексе (ограничение в 1 МБ данных).
 
 ```js
 const AWS = require('aws-sdk');
@@ -108,9 +107,9 @@ exports.handler = async (event, context) => {
 }
 ```
 
-### Querying a table
+### Запрос таблицы
 
-A `query` returns one or more items and item attributes by querying items from a table by primary key or secondary index.
+Метод `query` возвращает один или несколько элементов и атрибутов элементов, запрашивая элементы из таблицы по первичному ключу или вторичному индексу.
 
 ```js
 const AWS = require('aws-sdk');

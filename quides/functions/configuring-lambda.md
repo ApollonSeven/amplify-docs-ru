@@ -1,31 +1,28 @@
----
-title: Configuring Lambda function settings
-description: How to configure custom settings for your Lambda function
----
+# Настройка параметров Lambda функции
 
-You may want to override the Amplify CLI default configurations for your Lambda function or configure changes not available within the `amplify add function` workflow.
+Возможно, вы захотите переопределить конфигурации Amplify CLI по умолчанию для вашей Lambda функции или изменить настройки, недоступные в рабочем процессе `amplify add function`.
 
-*Example*: When creating a `Node.js` function, the CLI will automatically configure a runtime version, a default memory size, and more. There are a few things you may want to override or configure:
+*Пример*: При создании функции в `Node.js` CLI автоматически настраивает версию среды выполнения, размер памяти по умолчанию и многое другое. Есть несколько параметров, которые вы можете переопределить или настроить:
 
-1. Runtime
-2. Memory size
-3. Environment variables
+1. Runtime/Среда выполнения
+2. Объем памяти
+3. Переменные окружения
 
-Let's look at how to update all of these things.
+Давайте посмотрим как изменить эти параметры!
 
-## Updating the Runtime
+## Обновление среды выполнения (Runtime)
 
-You may want to tweak the runtime version to be either a newer or older version than the Amplify-generated default.
+Возможно, вы захотите настроить версию среды выполнения, чтобы она была либо более новой, либо более старой, чем версия по умолчанию, созданная Amplify.
 
-Let's say we've deployed a Lambda function using a Node.js runtime and we want to modify the version of the runtime to be `14.x`.
+Допустим, мы развернули функцию Lambda, используя среду выполнения Node.js, и мы хотим изменить версию среды выполнения на `14.x`.
 
-To do so, open __amplify/backend/function/function-name/function-name-cloudformation-template.json__ and set the `Runtime` property in the `LambdaFunction` resource to:
+Чтобы сделать это откройте __amplify/backend/function/function-name/function-name-cloudformation-template.json__ и измените параметр `Runtime` в `LambdaFunction` ресурсе:
 
 ```json
 "Resources": {
   "LambdaFunction": {
       ...
-      "Runtime": "nodejs14.x", // Runtime now set to 14.x
+      "Runtime": "nodejs14.x", // Среда выполнения сейчас установлена на 14.x
       "Layers": [],
       ...
     }
@@ -33,24 +30,24 @@ To do so, open __amplify/backend/function/function-name/function-name-cloudforma
 }
 ```
 
-Next, deploy the updates using the Amplify CLI:
+Затем загрузите обновления используя Amplify CLI:
 
 ```sh
 amplify push
 ```
 
-## Updating the default memory size
+## Обновление размера памяти по умолчанию
 
-When you deploy a function with Amplify, the default memory size will be set to a low setting (128MB). Often you will want to increase the default memory size in order to improve performance. A popular memory setting in Lambda is 1024MB as it speeds the function noticeably while usually keeping the cost the same or close to it.
+Когда вы создаете функцию с помощью Amplify, размер памяти по умолчанию будет установлен на низкий уровень (128 МБ). Зачастую вам может потребоваться увеличить размер памяти по умолчанию, чтобы повысить производительность. Популярный параметр памяти в Lambda - 1024 МБ, так как он заметно ускоряет функцию, обычно сохраняя при этом стоимость такой же или близкой к ней.
 
-To update the memory size, open __amplify/backend/function/function-name/function-name-cloudformation-template.json__ and set the `MemorySize` property in the `LambdaFunction` resource:
+За изменения размера памяти откройте __amplify/backend/function/function-name/function-name-cloudformation-template.json__ и измените параметр `MemorySize` в `LambdaFunction` ресурсе:
 
 ```json
 "Resources": {
   "LambdaFunction": {
       ...
       "Runtime": "nodejs14.x",
-      "MemorySize": "1024", // Memory size now set to 1024 mb
+      "MemorySize": "1024", // Объем памяти сейчас установлен на 1024 МБ
       "Layers": [],
       ...
     }
@@ -58,30 +55,30 @@ To update the memory size, open __amplify/backend/function/function-name/functio
 }
 ```
 
-Next, deploy the updates using the Amplify CLI:
+Затем загрузите обновления используя Amplify CLI:
 
 ```sh
 amplify push
 ```
 
-_To learn more about optimizing resources allocation for Lambda functions, check out [this](https://dev.to/aws/deep-dive-finding-the-optimal-resources-allocation-for-your-lambda-functions-35a6) blog post._
+_Чтобы узнать больше об оптимизации выделения ресурсов для Lambda функций, ознакомьтесь с [этой статьей](https://dev.to/aws/deep-dive-finding-the-optimal-resources-allocation-for-your-lambda-functions-35a6)._
 
 
-## Setting an environment variable
+## Установка переменных окружения
 
-A very common scenario is the need to set and use an environment variable in your Lambda function.
+Очень распространенный сценарий - необходимость установить и использовать переменную среды в вашей Lambda функции.
 
-There are generally two types of environment variables:
-- Secret values (example: access keys, API keys etc.)
-- Non-secret values (example: endpoint information, locale information etc.)
+Обычно существует два типа переменных среды:
+- Секретные значения (пример: ключи доступа, ключи API и т.д.)
+- Несекретные значения
 
-### 1. Configuring secret values
+### 1. Настройка секретных значений
 
-If your value is secret, you can use [Secrets Manager](https://aws.amazon.com/secrets-manager/).
+Если ваше значение является секретным, вы можете использовать [Secrets Manager](https://aws.amazon.com/secrets-manager/).
 
-To do so, you first need to create a secret in the [secrets manager](https://console.aws.amazon.com/secretsmanager) console.
+Для этого вам сначала нужно создать секретное значение в [secrets manager](https://console.aws.amazon.com/secretsmanager) консоли.
 
-Next, add a statement to the `PolicyDocument` in __amplify/backend/function/function-name/function-name-cloudformation-template.json__ to give the Lambda function permission to use the secret:
+Затем добавьте оператор `PolicyDocument` в __amplify/backend/function/function-name/function-name-cloudformation-template.json__ чтобы дать разрешение Lambda функции использовать секретные значения:
 
 ```json
 {
@@ -105,7 +102,7 @@ Next, add a statement to the `PolicyDocument` in __amplify/backend/function/func
 }
 ```
 
-Next, access the token in your function:
+Затем получите доступ к токену в вашей функции:
 
 ```js
 const AWS = require('aws-sdk')
@@ -116,11 +113,11 @@ const secret = await secretsManager.getSecretValue({ SecretId: 'YOUR_KEY' }).pro
 console.log(secret.SecretString)
 ```
 
-### 2. Configuring non-secret values
+### 2. Настройка несекретных значений
 
-If your value is just a configuration value, you can configure the CloudFormation configuration locally to set the value - in __amplify/backend/function/function-name/function-name-cloudformation-template.json__
+Если ваше значение является просто значением конфигурации, вы можете настроить конфигурацию CloudFormation локально, чтобы установить значение - в __amplify/backend/function/function-name/function-name-cloudformation-template.json__
 
-For this purpose, there is a section in the template - `Parameters` - that you can set.
+Для этого в шаблоне есть раздел - `Parameters` - который вы можете изменить.
 
 ```json
 "Parameters" : {
@@ -131,7 +128,7 @@ For this purpose, there is a section in the template - `Parameters` - that you c
 }
 ```
 
-And then use these parameters in `Environment` declaration:
+А затем используйте эти параметры в объявлении `Environment`:
 
 ```json
 "Environment":{
@@ -143,10 +140,5 @@ And then use these parameters in `Environment` declaration:
 }
 ```
 
-<amplify-callout>
-
-To view all configuration options available in AWS Lambda, check out the documentation [here](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-environment.html)
-
-To learn more about extending the Amplify CLI with custom resources, check out the documentation [here](~/cli/usage/customcf.md)
-
-</amplify-callout>
+> Чтобы просмотреть все параметры конфигурации, доступные в AWS Lambda, ознакомьтесь с документацией [здесь](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-environment.html)
+> Чтобы узнать больше о расширении Amplify CLI с помощью пользовательских ресурсов, ознакомьтесь с документацией [здесь](~/cli/usage/customcf.md)
