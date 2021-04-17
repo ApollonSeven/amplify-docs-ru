@@ -141,4 +141,5 @@ console.log(secret.SecretString)
 ```
 
 > Чтобы просмотреть все параметры конфигурации, доступные в AWS Lambda, ознакомьтесь с документацией [здесь](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-lambda-function-environment.html)
+> 
 > Чтобы узнать больше о расширении Amplify CLI с помощью пользовательских ресурсов, ознакомьтесь с документацией [здесь](~/cli/usage/customcf.md)
