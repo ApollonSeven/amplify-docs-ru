@@ -1,13 +1,10 @@
----
-title: How to create GraphQL subscriptions by id
-description: How to create a custom GraphQL subscription that will listen by id
----
+# Как создать подписку GraphQL по идентификатору
 
-In this guide you will learn how to create a custom GraphQL subscription that will only by connected and triggered by a mutation containing a specific ID as an argument.
+В этом руководстве вы узнаете, как создать настраиваемую подписку GraphQL, которая будет подключаться и запускаться только при мутации, содержащей в качестве аргумента конкретный идентификатор.
 
-When using the Amplify GraphQL transform library, there will often be times when you need to expand the GraphQL schema and operations created by the `@model` directive. A common use case is when fine grained control is needed for GraphQL subscriptions.
+При использовании библиотеки преобразования Amplify GraphQL часто возникают моменты, когда вам нужно расширить схему GraphQL и операции, созданные директивой `@model`. Типичный вариант использования - когда для подписок GraphQL требуется детальный контроль.
 
-Take for example the following GraphQL schema:
+Возьмем, например, следующую схему GraphQL:
 
 ```graphql
 type Post @model {
@@ -23,7 +20,7 @@ type Comment @model {
 }
 ```
 
-By default, subscriptions will be created for the following mutations:
+По умолчанию подписки будут созданы для следующих мутаций:
 
 ```graphql
 # Post type
@@ -37,11 +34,11 @@ onUpdateComment
 onDeleteComment
 ```
 
-One operation that is not covered is if you wanted to only subscribe to comments for a specific post.
+Одна операция, которая не описана, - это если вы хотите подписаться только на комментарии к определенной публикации.
 
-Because the schema has a one to many relationship enabled between posts and comments, you can use the auto-generated field `postCommentsId` that defines the relationship between the post and the comment to set this up in a new Subscription definition.
+Поскольку в схеме включена связь "один ко многим" между сообщениями и комментариями, вы можете использовать автоматически созданное поле `postCommentsId`, которое определяет связь между сообщением и комментарием, чтобы установить это в новом определении подписки.
 
-To implement this, you could update the schema with the following:
+Чтобы реализовать это, вы можете обновить схему следующим образом:
 
 ```graphql
 type Post @model {
@@ -64,6 +61,22 @@ type Subscription {
 
 ```
 
-<inline-fragment platform="ios" src="~/guides/api-graphql/fragments/ios/subscriptions-by-id.md"></inline-fragment>
-<inline-fragment platform="js" src="~/guides/api-graphql/fragments/js/subscriptions-by-id.md"></inline-fragment>
-<inline-fragment platform="android" src="~/guides/api-graphql/fragments/android/subscriptions-by-id.md"></inline-fragment>
+__JS__
+```js
+import { API } from 'aws-amplify';
+import { onCommentByPostId } from './graphql/subscriptions';
+
+API.graphql({
+  query: onCommentByPostId,
+  variables: {
+    postCommentsId: "12345"
+  }
+})
+.subscribe({
+  next: data => {
+    console.log('data: ', data)
+  }
+})
+```
+[__IOS__](~/guides/api-graphql/fragments/ios/subscriptions-by-id.md)
+[__Android__](~/guides/api-graphql/fragments/android/subscriptions-by-id.md)
