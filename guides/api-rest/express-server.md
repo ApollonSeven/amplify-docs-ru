@@ -1,24 +1,21 @@
----
-title: Express server
-description: How to deploy an Express server to AWS using AWS Amplify
----
+# ExpressJS сервер
 
-In this guide you'll learn how to deploy an [Express](https://expressjs.com/) web server complete with routing.
+В этом руководстве вы узнаете, как развернуть веб-сервер [Express](https://expressjs.com/) с маршрутизацией.
 
-### Initializing the Amplify project
+## Инициализация проекта Amplify
 
-Initialize a new Amplify project:
+Инициализируем новый проект Amplify:
 
 ```sh
 amplify init
 
-# Follow the steps to give the project a name, environment name, and set the default text editor.
-# Accept defaults for everything else and choose your AWS Profile.
+# Следуйте инструкциям, чтобы дать проекту имя, имя среды и установить текстовый редактор по умолчанию.
+# Примите значения по умолчанию для всего остального и выберите свой профиль AWS.
 ```
 
-### Creating the API and function
+### Создание API и функции
 
-Next, create the API and web server. To do so, you can use the Amplify `add` command:
+Затем создайте API и веб-сервер. Для этого вы можете использовать команду Amplify `add`:
 
 ```sh
 amplify add api
@@ -38,20 +35,20 @@ amplify add api
 ? Do you want to add another path? N
 ```
 
-The CLI has created a few things for you:
+CLI создал для вас несколько вещей:
 
-- API endpoint
-- Lambda function
-- Web server using [Serverless Express](https://github.com/awslabs/aws-serverless-express) in the function
-- Some boilerplate code for different methods on the `/items` route
+- API эндпоинт
+- Lambda функцию
+- Веб-сервер с использованием [Serverless Express](https://github.com/awslabs/aws-serverless-express) в функции
+- Некоторый шаблонный код для разных методов на маршруте `/items`
 
-### Updating the function code
+### Обновление кода функции
 
-Let's open the code for the server. 
+Откроем код для сервера.
 
-Open __amplify/backend/function/mylambda/src/index.js__.
+Откройте __amplify/backend/function/mylambda/src/index.js__.
 
-In this file you will see the main function handler with the `event` and `context` being proxied to an express server located at `./app.js` (do not make any changes to this file):
+В этом файле вы увидите основной обработчик функции с `event` и` context`, проксируемыми на экспресс-сервер, расположенный в `./app.js` (не вносите никаких изменений в этот файл):
 
 ```js
 const awsServerlessExpress = require('aws-serverless-express');
@@ -66,11 +63,11 @@ exports.handler = (event, context) => {
 
 ```
 
-Next, open __amplify/backend/function/mylambda/src/app.js__.
+Далее откройте __amplify/backend/function/mylambda/src/app.js__.
 
-Here, you will see the code for the express server and some boilerplate for the different HTTP methods for the route you declared. 
+Здесь вы увидите код экспресс-сервера и некоторый шаблон для различных HTTP-методов для объявленного вами маршрута.
 
-Find the route for `app.get('/items')` and update it to the following:
+Найдите маршрут для `app.get('/items')` и обновите его до следующего:
 
 ```js
 // amplify/backend/function/mylambda/src/app.js
@@ -80,29 +77,71 @@ app.get('/items', function(req, res) {
 });
 ```
 
-### Deploying the service
+### Развертывание сервиса
 
-To deploy the API and function, we can run the `push` command:
+Чтобы развернуть API и функцию, мы можем запустить команду `push`:
 
 ```sh
 amplify push
 ```
 
-<inline-fragment platform="js" src="~/guides/api-rest/fragments/js/express-api-call.md"></inline-fragment>
-<inline-fragment platform="ios" src="~/guides/api-rest/fragments/ios/express-api-call.md"></inline-fragment>
-<inline-fragment platform="android" src="~/guides/api-rest/fragments/android/express-api-call.md"></inline-fragment>
+Теперь вы можете начать взаимодействие с API:
 
-From here, you may want to add additional path. To do so, run the update command:
+__JS__
+
+```js
+// get request
+const items = await API.get('myapi', '/items')
+
+// post with data
+const data = { body: { items: ['some', 'new', 'items'] } }
+await API.post('myapi', '/items', data)
+```
+
+__Android__
+
+```kotlin
+suspend fun getItems() {
+    val options = RestOptions.builder()
+        .addPath("/items")
+        .build()
+    try {
+        val response = Amplify.API.get(options)
+        Log.i("MyAmplifyApp", "GET succeeded: $response")
+    } catch (failure: ApiException) {
+        Log.e("MyAmplifyApp", "GET failed", failure)
+    }
+}
+```
+
+__IOS__
+
+```swift
+func getItems() {
+    let request = RESTRequest(path: "/items", body: nil)
+    _ = Amplify.API.get(request: request) { result in
+        switch result {
+        case .success(let data):
+            let str = String(decoding: data, as: UTF8.self)
+            print("Success \(str)")
+        case .failure(let apiError):
+            print("Failed", apiError)
+        }
+    }
+}
+```
+
+Вы можете добавить дополнительный путь. Для этого запустите команду обновления:
 
 ```sh
 amplify update api
 ```
 
-From there, you can add, update, or remove paths. To learn more about interacting with REST APIs using Amplify, check out the complete documentation [here](~/lib//restapi/getting-started.md).
+Оттуда вы можете добавлять, обновлять или удалять пути. Чтобы узнать больше о взаимодействии с REST API с помощью Amplify, ознакомьтесь с полной документацией [здесь](~/lib/restapi/getting-started.md).
 
-The API endpoint is located in the `aws-exports.js` folder.
+Эндпоинт API находится в папке `aws-exports.js`.
 
-You can also interact directly with the API using this URL and the specified path:
+Вы также можете напрямую взаимодействовать с API, используя этот URL-адрес и указанный путь:
 
 ```sh
 curl https://<api-id>.execute-api.<api-region>.amazonaws.com/<your-env-name>/items
