@@ -1,4 +1,4 @@
-You can call an AppSync GraphQL API from a Node.js app or a Lambda function. Take a basic `Todo` app as an example: 
+Вы можете вызывать AppSync GraphQL API из NodeJS-приложения или Lambda-функции. Возьмем базовое `Todo`-приложение для примера:
 
 ```graphql
 type Todo @model {
@@ -8,9 +8,9 @@ type Todo @model {
 }
 ```
 
-This API will have operations available for `create`, `read`, `update`, and `delete`. Let's take a look at how to perform both a __query__ as well as a __mutation__ from a Lambda function using Node.js.
+Для этого API буду доступны `create`, `read`, `update`, и `delete` операции. Давайте посмотрим как выполнить __query__ и __mutation__ запросы из Lambda-функции используя Node.js.
 
-## Query
+## Query запрос
 
 ```javascript
 const axios = require('axios');
@@ -58,9 +58,9 @@ exports.handler = async (event) => {
 }
 ```
 
-## Mutation
+## Mutation запрос
 
-In this example we create a mutation showing how to pass in variables as arguments.
+В этом примере мы создаем мутацию показывающую как передавать переменные в качестве аргументов.
 
 ```js
 const axios = require('axios');
@@ -112,9 +112,10 @@ exports.handler = async (event) => {
 }
 ```
 
-## Signing a request from Lambda
+## Подписание запроса из Lambda
 
-What about working with custom signing of the request? Let's take a look at another example schema that uses `iam` authorization.
+Что если мы работаем с кастомной подписью запроса?
+Давайте взглянем на другой пример схемы, которая использует `iam` авторизацию.
 
 ```graphql
 type Todo @model @auth (
@@ -128,9 +129,9 @@ type Todo @model @auth (
 }
 ```
 
-Create a Lambda function with `amplify add function` and make sure to give access to your GraphQL API when prompted for in the `amplify add function` flow.
+Создайте Lambda-функцию командой `amplify add function` и убедитесь что дали доступ к вашему GraphQL API при вызове `amplify add function` потока.
 
-The CLI will automatically configure the Lambda execution IAM role required by the Lambda function to call the GraphQL API. The following function will sign the request and use environment variables for the AppSync and Region that `amplify add function` created for you.
+CLI автоматически настроит IAM-роль необходимую Lambda-функции для вызова GraphQL API. Следующая функция будет подписывать запрос и использует переменные окружения для доступа в AppSync и Region созданные при потоке `amplify add function`.
 
 ```javascript
 const https = require('https');
@@ -187,7 +188,7 @@ exports.handler = async (event) => {
 };
 ```
 
-Finally you can define the GraphQL operation you're running, in this case the `createTodo` mutation, in a separate `query.js` file:
+Наконец вы можете объявить выполняемую вами операцию GraphQL, в этом случае мутацию `createTodo`, в отдельной файле `query.js`:
 
 ```javascript
 module.exports = {

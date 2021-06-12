@@ -3,8 +3,8 @@ title: Calling DynamoDB using AWS Cognito triggers
 description: How to add an entry in DynamoDB, with user's information after sign-up post-confirmation
 ---
 
-If you are using AWS Cognito to handle authentication in your application you can use triggers to handle authentication 
-events. For example, send a welcome email after the user signs up. The complete documentation on AWS Cognito triggers can be found [here](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html).
+Если вы используете AWS Cogniton для обработки аутентификации в своем приложении, вы можете использовать триггеры для обработки событий аутентификации. К примеру вы можете отправлять приветственное письмо после авторизации пользователя.
+Полную документацию по триггерам AWS cognito вы можете найти [здесь](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html).
 
 In this guide, you will learn how to use a post confirmation trigger to save user's information to your DynamoDB table.
 Like mentioned in the previous guides, the easiest way to interact with DynamoDB from Lambda in a Node.js environment is 
