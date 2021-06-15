@@ -6,27 +6,25 @@ description: How to add an entry in DynamoDB, with user's information after sign
 Если вы используете AWS Cogniton для обработки аутентификации в своем приложении, вы можете использовать триггеры для обработки событий аутентификации. К примеру вы можете отправлять приветственное письмо после авторизации пользователя.
 Полную документацию по триггерам AWS cognito вы можете найти [здесь](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html).
 
-In this guide, you will learn how to use a post confirmation trigger to save user's information to your DynamoDB table.
-Like mentioned in the previous guides, the easiest way to interact with DynamoDB from Lambda in a Node.js environment is 
-to use the [DynamoDB document client](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html).
+В этой инструкции вы научитесь как использовать триггер после подтверждения для сохранения информации о пользователе в DynamoDB таблицу. 
+Как упомянуто в прошло инструкции самый простой способ взаиомодействия с DynamoDB из Lambda функции в Node.js окружении это использовать [DynamoDB document клиент](https://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html).
 
-Using this approach you can link a Cognito Identity to an user profile in your application, and have the possibility to list posts by author and be able to show their name, email 
-, date of creation, etc instead of their id.
+Используя этот подход вы можете подключить Cogntio Identity к профилю пользователя в вашем приложении и иметь возможность выводить список постов по автору и отображать их имя, email, дату создания и т.к. вместо их идентификаторов.
 
-The main advantage of this method is that you don't have to manually create the user in your GraphQL API using a mutation, which is another alternative.
+Главное преимущество такого метода это то что вам не нужно вручную создавать пользователя в вашем GraphQL API используя мутации, что является еще одной альтернативой.
 
-The main issue of this solution is that if you remove an user from AWS Cognito, your application won't know about it.
+Главная проблема такого решения это то, что если вы удалите пользователя из AWS Cognito, ваше приложение не будет знать об этом.
 
+### Сценарий
 
-### Scenario
+После регистрации пользователя вы хотите создать запись в DynamoDB таблицу с информацией о пользователе.
 
-After user sign-up, you want to create an entry in a DynamoDB table with the user's information.
+### Создание GraphQL API
 
-### Create GraphQL API
+На этом этапе создайте вашу User таблицу, где будут сохраняться записи с информацией пользователя. 
+In this step you will create your User table, where the entry with user's information will be saved. Это можно сделать используя Amplify GraphQL API.
 
-In this step you will create your User table, where the entry with user's information will be saved. This will be done using Amplify GraphQL API.
-
-You can skip this part, if you already have a GraphQL API with an User model.
+Вы можете пропустить эту часть если вы уже имеете GraphQL API с таюлицей User.
 
 ```sh
 amplify add api
@@ -42,7 +40,7 @@ amplify add api
 ? Do you want to edit the schema now? Yes
 ```
 
-The CLI should open the GraphQL schema, located at amplify/backend/api/contactapi/schema.graphql, in your text editor. Update the schema with the following and save the file:
+CLI должна открыть схему GraphQL, расположенную в `amplify/backend/api/contactapi/schema.graphql`, в вашем текстовом редакторе. Обновите схему со следующими данными и сохраните файл:
 
 ```graphql
 type User
@@ -55,9 +53,9 @@ type User
 ```
 
 
-### Create the lambda function
+### Создание lambda функции
 
-This function will be called after user post confirmation.
+Эта функция будет вызвана после подтверждения пользователя.
 
 ```sh
 amplify add function
@@ -74,7 +72,7 @@ amplify add function
 ? Do you want to edit the local lambda function now? N
 ```
 
-Next open the index.js file associated to your newly created lambda function, and paste the following code : 
+Затем откройте файл index.js относящийся к вашей новосозданной функции lambda и вставьте следующий код: 
 
 ```js
 var aws = require('aws-sdk');
@@ -117,22 +115,21 @@ exports.handler = async (event, context) => {
 };
 ```
 
-You can access your table name by calling the environment variable API_{APP_NAME}_USERTABLE_NAME.
+Вы можете получить доступ к названию таблице вызвав переменную окружения `API_{APP_NAME}_USERTABLE_NAME`.
 
 
-Deploy the lambda function :
+Загррузите функцию на сервер:
 
 ```sh
 amplify push
 ```
+Теперь ваша lambda функция готова к использованию! 
 
-Your lambda function is now ready to use!
+### Настройка тригерра пост-подтверждения
 
-### Configure the Post Confirmation trigger
+Чтобы настроить ваш AWS Cognito триггер для вызова уже созданной lambda функции вы должны выполнить следующее:
 
-To configure your AWS Cognito trigger to call the lambda function you just created, you should do the following :
-
-- Go to your [AWS Console](https://console.aws.amazon.com/console/home)
-- Navigate to AWS Cognito service, and choose 'Manage User Pools'
-- Select the User Pool related to your application
-- Go to 'Triggers' and look for Post Confirmation Trigger, then select your lambda function
+- Зайдите в [AWS Console](https://console.aws.amazon.com/console/home)
+- Перейдите к сервису AWS Cognito, и выберите 'Manage User Pools'
+- Выберите User Pool (пул пользователей) связанный с вашим приложением
+- Идите во вкладку 'Triggers' и найдите `Post Confirmation Trigger`, затем выберите вашу Lambda функцию
