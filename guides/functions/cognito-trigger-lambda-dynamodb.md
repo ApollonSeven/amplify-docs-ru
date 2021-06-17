@@ -1,7 +1,6 @@
----
-title: Calling DynamoDB using AWS Cognito triggers
-description: How to add an entry in DynamoDB, with user's information after sign-up post-confirmation
----
+# Вызов DynamoDB с использованием AWS Cognito triggers
+
+Как добавить запись информацией пользователя в DynamoDB после подтверждения регистрации
 
 Если вы используете AWS Cogniton для обработки аутентификации в своем приложении, вы можете использовать триггеры для обработки событий аутентификации. К примеру вы можете отправлять приветственное письмо после авторизации пользователя.
 Полную документацию по триггерам AWS cognito вы можете найти [здесь](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-user-identity-pools-working-with-aws-lambda-triggers.html).

@@ -1,17 +1,16 @@
----
-title: Admin actions
-description: Learn how to expose Administrative actions for your Cognito User Pool to your end user applications.
----
+# Действия администратора
 
-Admin Actions allow you to execute queries and operations against users and groups in your Cognito user pool.
+Узнайте как предоставить доступ к действиям администратора для Cognito User Pool в вашем приложении.
 
-For example, the ability to list all users in a Cognito User Pool may provide useful for the administrative panel of an app if the logged-in user is a member of a specific Group called "Admins". 
+Действия администратора позволяют вам выполнять запросы и операции с пользователями и группами в вашем Cognito user pool.
 
-> This is an advanced feature that is not recommended without an understanding of the underlying architecture. The associated infrastructure which is created is a base designed for you to customize for your specific business needs. We recommend removing any functionality which your app does not require.
+К примеру возможность вывести список всех пользователей в Cognito User Pool может оказаться полезным для административной панели приложения, если вошедший в систему пользователь является членом определенной группы под названием «Администраторы».
 
-The Amplify CLI can setup a REST endpoint with secure access to a Lambda function running with limited permissions to the User Pool if you wish to have these capabilities in your application, and you can choose to expose the actions to all users with a valid account or restrict to a specific User Pool Group.
+> Это продвинутая функция которая не рекомендуется без понимания базовой архитектуры. Созданная связанная инфраструктура является базой, разработанной для вас, чтобы вы могли настроить ее в соответствии с конкретными бизнес-потребностями. Мы рекомендуем удалить все функции, которые не требуются вашему приложению.
 
-## Enable Admin Queries
+Amplify CLI может настроить REST с безопасным доступом к функции Lambda, работающей с ограниченными разрешениями для пользовательского пула (User Pool) если вы хотите иметь эти возможности в вашем приложени и вы выбрали возможность предоставить действия для всех пользователей с валидным аккаунтом или ограничить для определенных групп (User Pool Group)
+
+## Включение запросов администратора
 
 ```bash
 amplify add auth
@@ -26,7 +25,7 @@ amplify add auth
   Enter a custom group 
 ```
 
-This will configure an API Gateway endpoint with a Cognito Authorizer that accepts an Access Token, which is used by a Lambda function to perform actions against the User Pool. The function is example code which you can use to remove, add, or alter functionality based on your business case by editing it in the `./amplify/backend/function/AdminQueriesXXX/src` directory and running an `amplify push` to deploy your changes. If you choose to restrict actions to a specific Group, custom middleware in the function will prevent any actions unless the user is a member of that Group.
+Это настроит эндпоинт API Gateway с помощью Cognito Authorizer который принимает Access Token, который используется функцией Lambda для выполнения действий к User Pool. Функция представляет собой пример кода который вы можете использовать для удаления, добавления или изменения функциональности в зависимости от вашего бизнес-сценария, отредактировав его в `./amplify/backend/function/AdminQueriesXXX/src` и запустив `amplify push` для развертывания ваших изменений. Если вы выберите ограничение действий для определенной группы, настраиваемый промежуточный процесс (middleware) в функции предотвратит действия пока пользователь является членом этой группы. 
 
 ## Admin Queries API
 
